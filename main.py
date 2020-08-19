@@ -17,7 +17,6 @@ print(PySide2.QtCore.__version__)
 print(PySide2.QtCore.__version_info__)
 
 
-
 # import time
 #
 # print('请输入时长：')
