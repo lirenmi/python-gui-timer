@@ -1,21 +1,35 @@
-import PySide2.QtCore
+from PySide2.QtCore import Slot
+from PySide2.QtWidgets import (
+    QApplication,
+    QWidget,
+    QPushButton,
+    QMainWindow
+)
 
-# Prints PySide2 version
-# e.g. 5.11.1a1
-print(PySide2.__version__)
 
-# Gets a tuple with each version component
-# e.g. (5, 11, 1, 'a', 1)
-print(PySide2.__version_info__)
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('计时器')
+        # self.resize(320, 480)
+        self.setFixedSize(320, 480)
 
-# Prints the Qt version used to compile PySide2
-# e.g. "5.11.2"
-print(PySide2.QtCore.__version__)
+        self.start_button = QPushButton('START')
+        self.start_button.setCheckable(True)
+        # 信号和插槽连接
+        self.start_button.clicked.connect(self.start_timer)
 
-# Gets a tuple with each version components of Qt used to compile PySide2
-# e.g. (5, 11, 2)
-print(PySide2.QtCore.__version_info__)
+        self.setCentralWidget(self.start_button)
 
+    @Slot()
+    def start_timer(self, checked):
+        print('start timer, ', checked)
+
+
+app = QApplication([])
+window = MainWindow()
+window.show()
+app.exec_()
 
 # import time
 #
