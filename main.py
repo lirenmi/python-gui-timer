@@ -1,9 +1,12 @@
-from PySide2.QtCore import Slot
+from PySide2.QtCore import Slot, Qt
 from PySide2.QtWidgets import (
     QApplication,
     QWidget,
     QPushButton,
-    QMainWindow
+    QMainWindow,
+    QLabel,
+    QVBoxLayout,
+    QSlider
 )
 
 
@@ -14,12 +17,33 @@ class MainWindow(QMainWindow):
         # self.resize(320, 480)
         self.setFixedSize(320, 480)
 
+        # 布局
+        layout = QVBoxLayout()
+
+        # 时间显示
+        self.show_time = QLabel('00:00')
+        layout.addWidget(self.show_time)
+
+        # 时间控制
+        self.setting_time = QSlider(Qt.Horizontal)
+        self.setting_time.setRange(0, 60)
+        layout.addWidget(self.setting_time)
+
+        # 开始按钮
         self.start_button = QPushButton('START')
         self.start_button.setCheckable(True)
         # 信号和插槽连接
         self.start_button.clicked.connect(self.start_timer)
+        layout.addWidget(self.start_button)
 
-        self.setCentralWidget(self.start_button)
+        # 停止按钮
+        self.stop_button = QPushButton('STOP')
+        layout.addWidget(self.stop_button)
+
+        container = QWidget()
+        container.setLayout(layout)
+
+        self.setCentralWidget(container)
 
     @Slot()
     def start_timer(self, checked):
