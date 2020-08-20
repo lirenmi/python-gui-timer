@@ -22,6 +22,7 @@ class MainWindow(QMainWindow):
 
         # 时间显示
         self.show_time = QLabel('00:00')
+        self.show_time.setAlignment(Qt.AlignCenter)
         layout.addWidget(self.show_time)
 
         # 时间控制
@@ -31,7 +32,6 @@ class MainWindow(QMainWindow):
 
         # 开始按钮
         self.start_button = QPushButton('START')
-        self.start_button.setCheckable(True)
         # 信号和插槽连接
         self.start_button.clicked.connect(self.start_timer)
         layout.addWidget(self.start_button)
@@ -40,10 +40,35 @@ class MainWindow(QMainWindow):
         self.stop_button = QPushButton('STOP')
         layout.addWidget(self.stop_button)
 
+        # space
+        space = QWidget()
+        space.setFixedHeight(10)
+        layout.addWidget(space)
+
         container = QWidget()
         container.setLayout(layout)
 
         self.setCentralWidget(container)
+
+        # QSS
+        self.setStyleSheet("""
+            QLabel {
+                font-size: 80px;
+                font-weight: bold;
+                border: 1px solid #000;
+            }
+            
+            QSlider {
+                margin: 20
+            }
+            
+            QPushButton {
+                height: 35px;
+                font-weight: bold;
+                font-size: 16px;
+            }
+            
+        """)
 
     @Slot()
     def start_timer(self, checked):
