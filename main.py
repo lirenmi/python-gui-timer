@@ -28,6 +28,7 @@ class MainWindow(QMainWindow):
         # 时间控制
         self.setting_time = QSlider(Qt.Horizontal)
         self.setting_time.setRange(0, 60)
+        self.setting_time.valueChanged.connect(self.setting_change)
         layout.addWidget(self.setting_time)
 
         # 开始按钮
@@ -38,6 +39,7 @@ class MainWindow(QMainWindow):
 
         # 停止按钮
         self.stop_button = QPushButton('STOP')
+        self.stop_button.clicked.connect(self.stop_timer)
         layout.addWidget(self.stop_button)
 
         # space
@@ -71,8 +73,16 @@ class MainWindow(QMainWindow):
         """)
 
     @Slot()
-    def start_timer(self, checked):
-        print('start timer, ', checked)
+    def start_timer(self):
+        print('start timer')
+
+    @Slot()
+    def stop_timer(self):
+        print('stop timer')
+
+    @Slot()
+    def setting_change(self, value):
+        print('setting change:', value)
 
 
 app = QApplication([])
