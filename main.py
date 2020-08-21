@@ -10,6 +10,17 @@ from PySide2.QtWidgets import (
 )
 
 
+def format_show(seconds):
+    if seconds > 0:
+        minutes = seconds // 60
+        minutes = '{}{}'.format(0, minutes) if minutes < 10 else str(minutes)
+        rest_seconds = seconds % 60
+        rest_seconds = '{}{}'.format(0, rest_seconds) if rest_seconds < 10 else str(rest_seconds)
+        return '{}:{}'.format(minutes, rest_seconds)
+    else:
+        return '00:00'
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -52,6 +63,10 @@ class MainWindow(QMainWindow):
 
         self.setCentralWidget(container)
 
+        # 自定义的属性
+        # 秒
+        self.current_time = 0
+
         # QSS
         self.setStyleSheet("""
             QLabel {
@@ -83,6 +98,9 @@ class MainWindow(QMainWindow):
     @Slot()
     def setting_change(self, value):
         print('setting change:', value)
+        self.current_time = value
+        show = format_show(value)
+        self.show_time.setText(show)
 
 
 app = QApplication([])
