@@ -1,4 +1,4 @@
-from PySide2.QtCore import Slot, Qt
+from PySide2.QtCore import Slot, Qt, QTimer
 from PySide2.QtWidgets import (
     QApplication,
     QWidget,
@@ -63,6 +63,11 @@ class MainWindow(QMainWindow):
 
         self.setCentralWidget(container)
 
+        # 计时器
+        self.timer = QTimer()
+        self.timer.setInterval(1000)
+        self.timer.timeout.connect(self.refresh_show)
+
         # 自定义的属性
         # 秒
         self.current_time = 0
@@ -90,10 +95,20 @@ class MainWindow(QMainWindow):
     @Slot()
     def start_timer(self):
         print('start timer')
+        self.timer.start()
+        self.start_button.setEnabled(False)
+        self.start_button.repaint()
+        self.setting_time.setEnabled(False)
+        self.setting_time.repaint()
 
     @Slot()
     def stop_timer(self):
         print('stop timer')
+        self.timer.stop()
+        self.start_button.setEnabled(True)
+        self.start_button.repaint()
+        self.setting_time.setEnabled(True)
+        self.setting_time.repaint()
 
     @Slot()
     def setting_change(self, value):
@@ -101,6 +116,17 @@ class MainWindow(QMainWindow):
         self.current_time = value
         show = format_show(value)
         self.show_time.setText(show)
+
+    @Slot()
+    def refresh_show(self):
+        self.current_time -= 1
+        self.setting_time.setValue(self.current_time)
+        if self.current_time >= 0:
+            show = format_show(self.current_time)
+            print(show)
+            self.show_time.setText(show)
+        else:
+            self.stop_timer()
 
 
 app = QApplication([])
