@@ -71,6 +71,8 @@ class MainWindow(QMainWindow):
         # 自定义的属性
         # 秒
         self.current_time = 0
+        # 1 = 计时中...
+        self.timer_status = 0
 
         # QSS
         self.setStyleSheet("""
@@ -96,6 +98,7 @@ class MainWindow(QMainWindow):
     def start_timer(self):
         print('start timer')
         self.timer.start()
+        self.timer_status = 1
         self.start_button.setEnabled(False)
         self.start_button.repaint()
         self.setting_time.setEnabled(False)
@@ -109,17 +112,23 @@ class MainWindow(QMainWindow):
         self.start_button.repaint()
         self.setting_time.setEnabled(True)
         self.setting_time.repaint()
+        self.setting_time.setRange(0, 60)
+        self.setting_time.setValue(self.current_time // 60)
+        self.timer_status = 0
 
     @Slot()
     def setting_change(self, value):
+        if self.timer_status == 1:
+            return
         print('setting change:', value)
-        self.current_time = value
-        show = format_show(value)
+        self.current_time = value*60
+        show = format_show(value*60)
         self.show_time.setText(show)
 
     @Slot()
     def refresh_show(self):
         self.current_time -= 1
+        self.setting_time.setRange(0, 3600)
         self.setting_time.setValue(self.current_time)
         if self.current_time >= 0:
             show = format_show(self.current_time)
