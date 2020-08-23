@@ -1,4 +1,5 @@
 from PySide2.QtCore import Slot, Qt, QTimer
+from PySide2.QtMultimedia import QSound
 from PySide2.QtWidgets import (
     QApplication,
     QWidget,
@@ -68,6 +69,10 @@ class MainWindow(QMainWindow):
         self.timer.setInterval(1000)
         self.timer.timeout.connect(self.refresh_show)
 
+        # 提示音
+        self.done_sound = QSound('done.wav')
+        self.ticking_sound = QSound('ticking.wav')
+
         # 自定义的属性
         # 秒
         self.current_time = 0
@@ -96,7 +101,6 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def start_timer(self):
-        print('start timer')
         self.timer.start()
         self.timer_status = 1
         self.start_button.setEnabled(False)
@@ -106,7 +110,6 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def stop_timer(self):
-        print('stop timer')
         self.timer.stop()
         self.start_button.setEnabled(True)
         self.start_button.repaint()
@@ -115,12 +118,12 @@ class MainWindow(QMainWindow):
         self.setting_time.setRange(0, 60)
         self.setting_time.setValue(self.current_time // 60)
         self.timer_status = 0
+        self.done_sound.play()
 
     @Slot()
     def setting_change(self, value):
         if self.timer_status == 1:
             return
-        print('setting change:', value)
         self.current_time = value*60
         show = format_show(value*60)
         self.show_time.setText(show)
@@ -131,8 +134,8 @@ class MainWindow(QMainWindow):
         self.setting_time.setRange(0, 3600)
         self.setting_time.setValue(self.current_time)
         if self.current_time >= 0:
+            self.ticking_sound.play()
             show = format_show(self.current_time)
-            print(show)
             self.show_time.setText(show)
         else:
             self.stop_timer()
@@ -143,28 +146,3 @@ window = MainWindow()
 window.show()
 app.exec_()
 
-# import time
-#
-# print('请输入时长：')
-# target_time = input()
-#
-#
-# def timer():
-#     for i in range(int(target_time), 0, -1):
-#         # 00:23
-#         print(format_show(i))
-#         time.sleep(1)
-#
-#
-# def format_show(seconds):
-#     if seconds > 0:
-#         minutes = seconds // 60
-#         minutes = '{}{}'.format(0, minutes) if minutes < 10 else str(minutes)
-#         rest_seconds = seconds % 60
-#         rest_seconds = '{}{}'.format(0, rest_seconds) if rest_seconds < 10 else str(rest_seconds)
-#         return '{}:{}'.format(minutes, rest_seconds)
-#     else:
-#         return '00:00'
-#
-#
-# timer()
